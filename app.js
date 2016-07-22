@@ -8,7 +8,7 @@ var pokeRouter = require('./routes/pokeRouter');
 //Create the App
 var app = express();
 
-
+//part that handles all the routing stuff
 app.use('/',pokeRouter);
 
 

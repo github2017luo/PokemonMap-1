@@ -33,6 +33,26 @@ pokeRouter.get('/', function(req, res, next) {
     });
 });
 
+pokeRouter.get('/pokemon/:pokemon', function(req, res, next){
+
+
+    pokemon.find({name:req.params.pokemon}, { _id: 1}).limit(1).next(function(err, doc) {
+        if (err) return next(err);
+
+        if (!doc) {
+            var err = new Error('Not a Pokemon');
+            err.status = 400;
+            return next(err);
+        }
+
+        sightings.find({pokedex_id: doc._id}).toArray(function (err, array) {
+            if (err) return next(err);
+
+            res.json(array);
+        });
+    });
+});
+
 //Post request to add a pokemon sighting encoded in json format
 pokeRouter.post('/', function(req,res,next){
 
@@ -45,6 +65,12 @@ pokeRouter.post('/', function(req,res,next){
             return next(err);
         }
 
+        if (!req.body.location){
+            var err = new Error('Location must be provided');
+            err.status = 400;
+            return next(err);
+        }
+
         if (!GJV.isPoint(req.body.location)){
             var err = new Error('Location is invalid GeoJSON Point');
             err.status = 400;
@@ -53,7 +79,7 @@ pokeRouter.post('/', function(req,res,next){
 
         sightings.insert({pokedex_id:doc._id, location:req.body.location}, function(err, result) {
             if (err) return next(err);
-            
+
             res.json({message:"Sighting Registered"})
 
         });
