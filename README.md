@@ -1,14 +1,14 @@
 # Town Map Web Service
----- 
+----
 
 ### Setup
 1. Clone git repository
 2. Open Project
 3. run “npm install” from command line
-4. “npm run-script setup” will setup a default TownMap database in MongoDB with the first 9 pokemon
+4. “npm run-script setup” will setup a default TownMap database in MongoDB with all 151 pokemon
 5. “npm start” should run the program
 
----- 
+----
 ### Todo
 - Store locations in barebones MongoDB ✅
 - Create get and post routes for storing and retrieving pokemon by type
