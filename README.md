@@ -5,7 +5,8 @@
 1. Clone git repository
 2. Open Project
 3. run “npm install” from command line
-4. “npm start” should run the program
+4. “npm run-script setup” will setup a default TownMap database in MongoDB with the first 9 pokemon
+5. “npm start” should run the program
 
 ---- 
 ### Todo
