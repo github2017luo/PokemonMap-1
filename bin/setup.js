@@ -2,8 +2,6 @@
 //Database setup file for testing and initial setup
 //
 
-//connect to the database
-
 
 db.Pokemon.drop();
 
@@ -164,7 +162,6 @@ db.Pokemon.insert(
 );
 
 db.Sightings.drop();
-
 
 //Breaks input
 db.Sightings.createIndex({ location: "2dsphere" });
