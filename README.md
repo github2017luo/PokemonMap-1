@@ -6,7 +6,7 @@
 > BASEURL/sightings/@longitude,latitude(,distance)(,pokemon)
 
 ####Add a Pokemon sighting with a post request
-> BASEURL/add-sighting/
+> BASEURL/sightings/
 
 \*_The post body must be in JSON form_\*
 
