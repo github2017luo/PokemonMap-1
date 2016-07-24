@@ -29,7 +29,7 @@
 3. run “npm install” from command line
 4. “npm run-script setup” will setup a default TownMap database in MongoDB with all 151 pokemon
 5. “npm start” should run the program
-6. 
+
 ---- 
 ### Todo
 - Store locations in barebones MongoDB ✅
