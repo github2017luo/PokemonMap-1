@@ -98,6 +98,7 @@ pokeRouter.post('/sightings/', function (req, res, next) {
     pokemon.find({name: req.body.name}, {_id: 1}).limit(1).next(function (err, doc) {
         if (err) return next(err);
 
+
         if (!doc) {
             err = new Error('Not a Pokemon');
             err.status = 400;
@@ -120,7 +121,7 @@ pokeRouter.post('/sightings/', function (req, res, next) {
             if (err) return next(err);
 
             //Respond with success message
-            res.json({message: "Sighting Registered", result: result });
+            res.json({message: "Sighting Registered", sighting: result.ops[0] });
         });
     });
 
