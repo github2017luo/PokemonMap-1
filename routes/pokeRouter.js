@@ -60,6 +60,23 @@ pokeRouter.get('/pokemon/:pokemon([a-z]+)', function (req, res){
     res.json(req.pokemon);
 });
 
+//Route to look up nearby pokemon by type
+pokeRouter.get('/sightings/:value([a-z]+)', function (req, res) {
+    var test = {};
+    pokemon.find().each(function(err, item) {
+        if (item == null) {
+            res.end();
+        } else if ((req.params.value == item.type1) || (req.params.value == item.type2)) {
+            sightings.find({pokedex_id: item._id}).toArray(function(err, docs) {
+                if (docs == null) {
+                    return null;
+                }
+                res.write(JSON.stringify(docs));
+            });
+        }
+    });
+});
+
 pokeRouter.get('/sightings/@:longitude(-?\\d{1,3}.\\d{1,10}|-?\\d{1,3}),:latitude(-?\\d{1,3}.\\d{1,10}|-?\\d{1,3})(,:distance(\\d+)[m]?)?(,:pokemon([a-z]+))?', function (req, res, next) {
     var distance = (req.params.distance) ? Number(req.params.distance) : DEFAULT_DISTANCE;
 
