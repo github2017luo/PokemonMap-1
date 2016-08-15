@@ -319,36 +319,51 @@
             request.onload = function() {
                 if (request.status >= 200 && request.status < 400) {
                     var resp = request.responseText;
-                } else {
-                }
+                } else {}
             };
 
             var temp = null;
 
-            request.onerror = function() {
-            };
+            request.onerror = function() {};
 
             request.send();
 
-            var icon = {
-              url: "http://cdn.bulbagarden.net/upload/thumb/f/fd/134Vaporeon.png/250px-134Vaporeon.png",
-              scaledSize: new google.maps.Size(50, 50),
-              origin: new google.maps.Point(0,0),
-              anchor: new google.maps.Point(25,25)
-            };
 
             request.onreadystatechange = function() {
                 if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
                     temp = JSON.parse(request.responseText);
-                    console.log(temp[1].location);
-                    var myLatlng = new google.maps.LatLng(temp[1].location.coordinates[1], temp[1].location.coordinates[0]);
-                    var marker = new google.maps.Marker({
-                      position: myLatlng,
-                      map: map,
-                      title: "vaporeon",
-                      animation: google.maps.Animation.DROP,
-                      icon: icon
-                    });
+                    for (var i = 0; i < temp.length; i++) {
+                        if ((JSON.stringify(temp[i].pokedex_id).length) == 1) {
+                          var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/00" + temp[i].pokedex_id + ".png";
+                        } else if ((JSON.stringify(temp[i].pokedex_id).length) == 2) {
+                          var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/0" + temp[i].pokedex_id + ".png";
+                        } else if ((JSON.stringify(temp[i].pokedex_id).length) == 3) {
+                          var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/" + temp[i].pokedex_id + ".png";
+                        }
+
+                        var icon = {
+                            url: string,
+                            scaledSize: new google.maps.Size(50, 50),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(25, 25)
+                        };
+                        var myLatlng = new google.maps.LatLng(temp[i].location.coordinates[1], temp[i].location.coordinates[0]);
+                        var marker = new google.maps.Marker({
+                            position: myLatlng,
+                            map: map,
+                            title: "vaporeon",
+                            animation: google.maps.Animation.DROP,
+                            icon: icon
+                        });
+
+                        marker.info = new google.maps.InfoWindow({
+                            content: "benis"
+                        });
+
+                        google.maps.event.addListener(marker, 'click', function() {
+                            marker.info.open(map, marker);
+                        });
+                    }
                 }
             }
         }
