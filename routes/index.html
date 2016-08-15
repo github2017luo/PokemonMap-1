@@ -29,8 +29,8 @@
         }
 
         .select-wrapper input.select-dropdown {
-          margin-bottom: 0px;
-          border-bottom: 0px;
+            margin-bottom: 0px;
+            border-bottom: 0px;
         }
 
         .controls {
@@ -312,6 +312,47 @@
                 });
                 map.fitBounds(bounds);
             });
+
+            var request = new XMLHttpRequest();
+            request.open('GET', '/sightings', true);
+
+            request.onload = function() {
+                if (request.status >= 200 && request.status < 400) {
+                    // Success!
+                    var resp = request.responseText;
+                } else {
+                    // We reached our target server, but it returned an error
+
+                }
+            };
+
+            request.onerror = function() {
+                // There was a connection error of some sort
+            };
+
+            request.send();
+            request.onreadystatechange = function() {
+              if(request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+            console.log(request.responseText);
+        }
+            }
+            var penis = request.response;
+            console.log(penis);
+
+            var script = document.createElement('script');
+            script.src = 'https://developers.google.com/maps/documentation/javascript/tutorials/js/earthquake_GeoJSONP.js';
+            document.getElementsByTagName('head')[0].appendChild(script);
+
+            window.eqfeed_callback = function(results) {
+                for (var i = 0; i < results.features.length; i++) {
+                    var coords = results.features[i].geometry.coordinates;
+                    var latLng = new google.maps.LatLng(coords[1], coords[0]);
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map
+                    });
+                }
+            }
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-IXLlQOUNyFo5WY8PKtNN15wF4H5ZWj8&libraries=places&callback=initAutocomplete" async defer></script>
