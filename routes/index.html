@@ -256,7 +256,7 @@
                     lat: 34.397,
                     lng: -41.644
                 },
-                zoom: 4,
+                zoom: 2,
                 mapTypeControlOptions: {
                     mapTypeIds: []
                 },
@@ -318,38 +318,36 @@
 
             request.onload = function() {
                 if (request.status >= 200 && request.status < 400) {
-                    // Success!
                     var resp = request.responseText;
                 } else {
-                    // We reached our target server, but it returned an error
-
                 }
             };
 
+            var temp = null;
+
             request.onerror = function() {
-                // There was a connection error of some sort
             };
 
             request.send();
+
+            var icon = {
+              url: "http://cdn.bulbagarden.net/upload/thumb/f/fd/134Vaporeon.png/250px-134Vaporeon.png",
+              scaledSize: new google.maps.Size(50, 50),
+              origin: new google.maps.Point(0,0),
+              anchor: new google.maps.Point(25,25)
+            };
+
             request.onreadystatechange = function() {
-              if(request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-            console.log(request.responseText);
-        }
-            }
-            var penis = request.response;
-            console.log(penis);
-
-            var script = document.createElement('script');
-            script.src = 'https://developers.google.com/maps/documentation/javascript/tutorials/js/earthquake_GeoJSONP.js';
-            document.getElementsByTagName('head')[0].appendChild(script);
-
-            window.eqfeed_callback = function(results) {
-                for (var i = 0; i < results.features.length; i++) {
-                    var coords = results.features[i].geometry.coordinates;
-                    var latLng = new google.maps.LatLng(coords[1], coords[0]);
+                if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                    temp = JSON.parse(request.responseText);
+                    console.log(temp[1].location);
+                    var myLatlng = new google.maps.LatLng(temp[1].location.coordinates[1], temp[1].location.coordinates[0]);
                     var marker = new google.maps.Marker({
-                        position: latLng,
-                        map: map
+                      position: myLatlng,
+                      map: map,
+                      title: "vaporeon",
+                      animation: google.maps.Animation.DROP,
+                      icon: icon
                     });
                 }
             }
