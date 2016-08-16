@@ -30,7 +30,7 @@ pokeRouter.use(bodyParser.urlencoded({
     extended: true
 })); // support encoded bodies
 
-pokeRouter.get('/', function (req,res) {
+pokeRouter.get('/', function(req, res) {
     res.sendFile(__dirname + '\\index.html');
 });
 
@@ -68,6 +68,19 @@ pokeRouter.param('pokemon', function(req, res, next, name, what) {
 //Route to look up pokemon and their types
 pokeRouter.get('/pokemon/:pokemon([a-z]+)', function(req, res) {
     res.json(req.pokemon);
+});
+
+
+pokeRouter.get('/sightings/:name([a-z]+)', function(req, res) {
+    var temp = pokemon.find({name: req.params.name}).toArray(function (err, docs) {
+        if (err) throw err;
+
+        sightings.find({pokedex_id: docs[0]._id}).toArray(function (err, docs) {
+            if (err) throw err;
+
+            res.json(docs);
+        });
+    });
 });
 
 //Route to look up nearby pokemon by type
