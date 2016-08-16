@@ -355,14 +355,6 @@
                             animation: google.maps.Animation.DROP,
                             icon: icon
                         });
-
-                        marker.info = new google.maps.InfoWindow({
-                            content: "benis"
-                        });
-
-                        google.maps.event.addListener(marker, 'click', function() {
-                            marker.info.open(map, marker);
-                        });
                     }
                 }
             }
