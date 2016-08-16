@@ -30,6 +30,10 @@ pokeRouter.use(bodyParser.urlencoded({
     extended: true
 })); // support encoded bodies
 
+pokeRouter.get('/', function (req,res) {
+    res.sendFile(__dirname + '\\index.html');
+});
+
 //Default Request to show all pokemon
 pokeRouter.get('/sightings/', function(req, res, next) {
     sightings.find().toArray(function(err, docs) {
