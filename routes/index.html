@@ -368,6 +368,9 @@
         function dropDown() {
           var select = document.getElementById('selectId');
           var str = select.options[select.selectedIndex].value;
+          if (str == "all") {
+            str = "";
+          }
           var url = "/sightings/" + str;
 
 
