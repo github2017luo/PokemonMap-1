@@ -162,6 +162,7 @@ db.Pokemon.insert(
 );
 
 db.Sightings.drop();
+db.Display.drop();
 
 //Breaks input
 db.Sightings.createIndex({ location: "2dsphere" });

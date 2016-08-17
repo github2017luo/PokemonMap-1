@@ -33,8 +33,9 @@
 ---- 
 ### Todo
 - Store locations in barebones MongoDB ✅
-- Create get and post routes for storing and retrieving pokemon by type
-- Create get and post routes for storing and retrieving pokemon by radius
+- Create get route for retrieving pokemon by number ✅
+- Create get route for retrieving pokemon by type
+- Create get route for retrieving pokemon by radius
 - Add Timestamps for sorting by time
 - Device/user tracking (for shit-heads)
 - User accounts
