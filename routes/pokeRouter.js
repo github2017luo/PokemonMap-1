@@ -66,6 +66,14 @@ pokeRouter.param('pokemon', function(req, res, next, name, what) {
 });
 
 //Route to look up pokemon and their types
+pokeRouter.get('/pokemon/', function(req, res) {
+    pokemon.find().toArray(function(err, docs) {
+        if (err) return next(err);
+        res.json(docs)
+    });
+});
+
+//Route to look up pokemon and their types
 pokeRouter.get('/pokemon/:pokemon([a-z]+)', function(req, res) {
     res.json(req.pokemon);
 });
