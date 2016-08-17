@@ -9,7 +9,7 @@ var pokeRouter = require('./routes/pokeRouter');
 var app = express();
 
 //part that handles all the routing stuff
-app.use('/',pokeRouter);
+app.use('/', pokeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
