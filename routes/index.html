@@ -87,8 +87,8 @@
     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <div id="map"></div>
     <div class="input-field col s12" id="dropdown">
-        <select>
-            <option value="selected">All Pokemon</option>
+        <select onchange="dropDown();" id="selectId">
+            <option value="all">All Pokemon</option>
             <option value="bulbasaur">Bulbasaur</option>
             <option value="ivysaur">Ivysaur</option>
             <option value="venusaur">Venusaur</option>
@@ -250,8 +250,11 @@
         });
     </script>
     <script>
+    var markers = [];
+    var map;
+    var globalLength;
         function initAutocomplete() {
-            var map = new google.maps.Map(document.getElementById('map'), {
+            map = new google.maps.Map(document.getElementById('map'), {
                 center: {
                     lat: 34.397,
                     lng: -41.644
@@ -271,7 +274,6 @@
                 searchBox.setBounds(map.getBounds());
             });
 
-            var markers = [];
             searchBox.addListener('places_changed', function() {
                 var places = searchBox.getPlaces();
 
@@ -304,6 +306,7 @@
                         position: place.geometry.location
                     }));
 
+
                     if (place.geometry.viewport) {
                         bounds.union(place.geometry.viewport);
                     } else {
@@ -312,55 +315,168 @@
                 });
                 map.fitBounds(bounds);
             });
+            var nothing = "";
+            test(nothing);
+        }
 
-            var request = new XMLHttpRequest();
-            request.open('GET', '/sightings', true);
+        function test(optional) {
+                      setInvisibleOnAll();
+                      var url = '/sightings/' + optional;
+                      var request = new XMLHttpRequest();
+                      request.open('GET', url, true);
 
-            request.onload = function() {
-                if (request.status >= 200 && request.status < 400) {
-                    var resp = request.responseText;
-                } else {}
-            };
+                      request.onload = function() {
+                          if (request.status >= 200 && request.status < 400) {
+                              var resp = request.responseText;
+                          } else {}
+                      };
 
-            var temp = null;
+                      var temp = null;
+                      request.onerror = function() {};
+                      request.send();
+                      request.onreadystatechange = function() {
+                          if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                              temp = JSON.parse(request.responseText);
+                              for (var i = 0; i < temp.length; i++) {
+                                  if ((JSON.stringify(temp[i].pokedex_id).length) == 1) {
+                                    var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/00" + temp[i].pokedex_id + ".png";
+                                  } else if ((JSON.stringify(temp[i].pokedex_id).length) == 2) {
+                                    var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/0" + temp[i].pokedex_id + ".png";
+                                  } else if ((JSON.stringify(temp[i].pokedex_id).length) == 3) {
+                                    var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/" + temp[i].pokedex_id + ".png";
+                                  }
 
-            request.onerror = function() {};
+                                  var icon = {
+                                      url: string,
+                                      scaledSize: new google.maps.Size(50, 50),
+                                      origin: new google.maps.Point(0, 0),
+                                      anchor: new google.maps.Point(25, 25)
+                                  };
+                                  var myLatlng = new google.maps.LatLng(temp[i].location.coordinates[1], temp[i].location.coordinates[0]);
+                                  var marker = new google.maps.Marker({
+                                      position: myLatlng,
+                                      map: map,
+                                      animation: google.maps.Animation.DROP,
+                                      icon: icon
+                                  });
+                                  markers.push(marker);
+                              }
+                          }
+                      }
+        }
 
-            request.send();
+        function dropDown() {
+          var select = document.getElementById('selectId');
+          var str = select.options[select.selectedIndex].value;
+          var url = "/sightings/" + str;
 
 
-            request.onreadystatechange = function() {
-                if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-                    temp = JSON.parse(request.responseText);
-                    for (var i = 0; i < temp.length; i++) {
-                        if ((JSON.stringify(temp[i].pokedex_id).length) == 1) {
-                          var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/00" + temp[i].pokedex_id + ".png";
-                        } else if ((JSON.stringify(temp[i].pokedex_id).length) == 2) {
-                          var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/0" + temp[i].pokedex_id + ".png";
-                        } else if ((JSON.stringify(temp[i].pokedex_id).length) == 3) {
-                          var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/" + temp[i].pokedex_id + ".png";
-                        }
+          var request = new XMLHttpRequest();
+          request.open('GET', url, true);
 
-                        var icon = {
-                            url: string,
-                            scaledSize: new google.maps.Size(50, 50),
-                            origin: new google.maps.Point(0, 0),
-                            anchor: new google.maps.Point(25, 25)
-                        };
-                        var myLatlng = new google.maps.LatLng(temp[i].location.coordinates[1], temp[i].location.coordinates[0]);
-                        var marker = new google.maps.Marker({
-                            position: myLatlng,
-                            map: map,
-                            title: "vaporeon",
-                            animation: google.maps.Animation.DROP,
-                            icon: icon
-                        });
-                    }
-                }
+          request.onload = function() {
+              if (request.status >= 200 && request.status < 400) {
+                  var resp = request.responseText;
+              } else {}
+          };
+
+          test(str);
+
+/*
+          var temp = null;
+          request.onerror = function() {};
+          request.send();
+          request.onreadystatechange = function() {
+              if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                  temp = JSON.parse(request.responseText);
+                  for (var i = 0; i < temp.length; i++) {
+                      if ((JSON.stringify(temp[i].pokedex_id).length) == 1) {
+                        var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/00" + temp[i].pokedex_id + ".png";
+                      } else if ((JSON.stringify(temp[i].pokedex_id).length) == 2) {
+                        var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/0" + temp[i].pokedex_id + ".png";
+                      } else if ((JSON.stringify(temp[i].pokedex_id).length) == 3) {
+                        var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/" + temp[i].pokedex_id + ".png";
+                      }
+                      console.log(temp[i].location.coordinates[1]);
+
+                      var icon = {
+                          url: string,
+                          scaledSize: new google.maps.Size(50, 50),
+                          origin: new google.maps.Point(0, 0),
+                          anchor: new google.maps.Point(25, 25)
+                      };
+                      var myLatlng = new google.maps.LatLng(temp[i].location.coordinates[1], temp[i].location.coordinates[0]);
+                      marker = new google.maps.Marker({
+                          position: myLatlng,
+                          title: "vaporeon",
+                          animation: google.maps.Animation.DROP,
+                          icon: icon
+                      });
+                    markers.push(marker);
+                    console.log(markers[2]);
+                    markers[3].setVisible(true);
+                  }
+              }
             }
+            */
+        }
+
+        function setInvisibleOnAll() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setVisible(false);
+            }
+            globalLength = markers.length;
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-IXLlQOUNyFo5WY8PKtNN15wF4H5ZWj8&libraries=places&callback=initAutocomplete" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-IXLlQOUNyFo5WY8PKtNN15wF4H5ZWj8&libraries=places&callback=initAutocomplete" async defer>
+    </script>
+    <script>
+
+/*
+        var request = new XMLHttpRequest();
+        request.open('GET', url, true);
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                var resp = request.responseText;
+            } else {}
+        };
+
+        var temp = null;
+        request.onerror = function() {};
+        request.send();
+        request.onreadystatechange = function() {
+            if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                temp = JSON.parse(request.responseText);
+                for (var i = 0; i < temp.length; i++) {
+                    if ((JSON.stringify(temp[i].pokedex_id).length) == 1) {
+                      var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/00" + temp[i].pokedex_id + ".png";
+                    } else if ((JSON.stringify(temp[i].pokedex_id).length) == 2) {
+                      var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/0" + temp[i].pokedex_id + ".png";
+                    } else if ((JSON.stringify(temp[i].pokedex_id).length) == 3) {
+                      var string = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/" + temp[i].pokedex_id + ".png";
+                    }
+
+                    var icon = {
+                        url: string,
+                        scaledSize: new google.maps.Size(50, 50),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(25, 25)
+                    };
+                    var myLatlng = new google.maps.LatLng(temp[i].location.coordinates[1], temp[i].location.coordinates[0]);
+                    marker = new google.maps.Marker({
+                        position: myLatlng,
+                        title: "vaporeon",
+                        animation: google.maps.Animation.DROP,
+                        icon: icon
+                    });
+                }
+            }
+          } */
+    </script>
+    <script>
+
+    </script>
 </body>
 
 </html>

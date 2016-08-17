@@ -72,13 +72,13 @@ pokeRouter.get('/pokemon/:pokemon([a-z]+)', function(req, res) {
 
 
 pokeRouter.get('/sightings/:name([a-z]+)', function(req, res) {
-    var temp = pokemon.find({name: req.params.name}).toArray(function (err, docs) {
+    pokemon.find({name: req.params.name}).toArray(function (err, docs) {
         if (err) throw err;
 
-        sightings.find({pokedex_id: docs[0]._id}).toArray(function (err, docs) {
+        sightings.find({pokedex_id: docs[0]._id}).toArray(function (err, moreDocs) {
             if (err) throw err;
 
-            res.json(docs);
+            res.json(moreDocs);
         });
     });
 });
