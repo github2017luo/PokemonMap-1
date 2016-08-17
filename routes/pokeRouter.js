@@ -2,7 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongodb = require('mongodb');
 var GJV = require('geojson-validation');
-var path = require('path');
 
 var MongoClient = require('mongodb').MongoClient;
 
@@ -31,9 +30,6 @@ pokeRouter.use(bodyParser.urlencoded({
     extended: true
 })); // support encoded bodies
 
-pokeRouter.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '/index.html'));
-});
 
 //Default Request to show all pokemon
 pokeRouter.get('/sightings/', function(req, res, next) {

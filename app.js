@@ -8,6 +8,11 @@ var pokeRouter = require('./routes/pokeRouter');
 //Create the App
 var app = express();
 
+//WebApp page
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/index.html'));
+});
+
 //part that handles all the routing stuff
 app.use('/', pokeRouter);
 
