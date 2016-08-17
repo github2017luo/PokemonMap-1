@@ -280,10 +280,6 @@
                 if (places.length == 0) {
                     return;
                 }
-                markers.forEach(function(marker) {
-                    marker.setMap(null);
-                });
-                markers = [];
 
                 var bounds = new google.maps.LatLngBounds();
                 places.forEach(function(place) {
